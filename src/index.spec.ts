@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest';
 
-import { Hello } from './index';
+import { confit } from './index';
 
 describe('Module exports', () => {
   test('should export expected elements', () => {
-    expect(Hello).toBe('World');
+    expect(typeof confit).toBe('function');
   });
 });
