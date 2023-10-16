@@ -1,7 +1,8 @@
 export type ShortstopHandler<T> = (value: string) => T | Promise<T>;
 
 export interface ConfitOptions {
-  defaults: string;
+  defaults?: string;
   basedir: string;
-  protocols: Record<string, ShortstopHandler<unknown>>;
+  protocols?: Record<string, ShortstopHandler<unknown>>;
+  excludeEnvVariables?: string[];
 }

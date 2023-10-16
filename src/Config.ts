@@ -44,16 +44,45 @@ export class Config<ConfigurationSchema extends object> {
     return undefined as ConfitPathValue<ConfigurationSchema, P>;
   }
 
+  /**
+   * Get a value from the configuration store. Keys should be separated with
+   * colons. For example to get the value of c on object b on object a of the root
+   * store, use a:b:c.
+   *
+   * Note that unless you validate your schema with typia or similar, it is
+   * possible, nay likely, that the return type of this function will be a lie.
+   * In the end we are dealing with JSON, and we are not doing runtime type checking.
+   * (But you can) The most relevant part of this is that this version
+   * (as opposed to getOrThrow) will return undefined if the key is not found.
+   */
   get<P extends ConfitDeepKeys<ConfigurationSchema>>(
     path: P,
   ): ConfitPathValue<ConfigurationSchema, P> {
     return this.getValue(path, false);
   }
 
+  /**
+   * Get a value from the configuration store. Keys should be separated with
+   * colons. For example to get the value of c on object b on object a of the root
+   * store, use a:b:c.
+   *
+   * Note that unless you validate your schema with typia or similar, it is
+   * possible, nay likely, that the return type of this function will be a lie.
+   * In the end we are dealing with JSON, and we are not doing runtime type checking.
+   * (But you can) The most relevant part of this is that this version
+   * (as opposed to get) will throw an exception if the key is not found.
+   */
   getOrThrow<P extends ConfitDeepKeys<ConfigurationSchema>>(path: P) {
     return this.getValue(path, true);
   }
 
+  /**
+   * Set a value in the configuration store. Keys should be separated with
+   * colons. For example to set the value of c on object b on object a of the root
+   * store, use a:b:c. If parts of the key do not exist, they will be initialized
+   * to an empty object. Also note that the changes are not written back to the
+   * filesystem, as we would have no idea where to write them.
+   */
   set<P extends ConfitDeepKeys<ConfigurationSchema>>(
     path: P,
     value: ConfitPathValue<ConfigurationSchema, P>,
