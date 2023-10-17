@@ -1,3 +1,10 @@
+## [1.0.4](https://github.com/sesamecare/confit/compare/v1.0.3...v1.0.4) (2023-10-17)
+
+
+### Bug Fixes
+
+* **types:** rework types to better handle optionals ([a767929](https://github.com/sesamecare/confit/commit/a7679297e80b2487864910efbcf0eab4693fd857))
+
 ## [1.0.3](https://github.com/sesamecare/confit/compare/v1.0.2...v1.0.3) (2023-10-17)
 
 
