@@ -1,3 +1,10 @@
+## [1.0.3](https://github.com/sesamecare/confit/compare/v1.0.2...v1.0.3) (2023-10-17)
+
+
+### Bug Fixes
+
+* **type:** rework config type a bit to force base confit type on config ([9e47b73](https://github.com/sesamecare/confit/commit/9e47b73c08bbb553c3997c089531f44dceab3dc4))
+
 ## [1.0.2](https://github.com/sesamecare/confit/compare/v1.0.1...v1.0.2) (2023-10-17)
 
 
