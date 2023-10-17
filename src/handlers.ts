@@ -1,5 +1,5 @@
 import { createShortstopHandlers } from './shortstop';
-import { path } from './shortstop/path';
+import { pathHandler } from './shortstop/fileHandlers';
 import { ConfitOptions, IntermediateConfigValue } from './types';
 import { loadJsonc } from './common';
 
@@ -40,10 +40,10 @@ export async function resolveImport(
   basedir: string,
 ): Promise<IntermediateConfigValue> {
   const shorty = createShortstopHandlers();
-  const pathHandler = path(basedir);
+  const resolver = pathHandler(basedir);
 
   shorty.use('import', async (file: string) => {
-    const resolved = pathHandler(file);
+    const resolved = resolver(file);
     const json = await loadJsonc(resolved);
     return shorty.resolve(json);
   });
