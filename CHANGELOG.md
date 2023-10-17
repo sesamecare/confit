@@ -1,3 +1,10 @@
+## [1.0.5](https://github.com/sesamecare/confit/compare/v1.0.4...v1.0.5) (2023-10-17)
+
+
+### Bug Fixes
+
+* **yaml:** avoid leaking js-yaml types ([bc46944](https://github.com/sesamecare/confit/commit/bc469448e5d18cf2780f24588e3ef798842351bc))
+
 ## [1.0.4](https://github.com/sesamecare/confit/compare/v1.0.3...v1.0.4) (2023-10-17)
 
 
