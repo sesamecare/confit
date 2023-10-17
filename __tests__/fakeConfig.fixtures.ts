@@ -5,6 +5,10 @@ export interface FakeConfigurationSchema {
       theMoon: boolean;
     };
   };
+  optional?: {
+    still?: string;
+    notOptional: string;
+  };
 }
 
 export const fakeConfigurationSchema: FakeConfigurationSchema = {
@@ -13,5 +17,8 @@ export const fakeConfigurationSchema: FakeConfigurationSchema = {
     over: {
       theMoon: false,
     },
+  },
+  optional: {
+    notOptional: 'I am not optional',
   },
 };

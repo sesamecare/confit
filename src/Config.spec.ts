@@ -4,16 +4,21 @@ import { FakeConfigurationSchema, fakeConfigurationSchema } from '../__tests__/f
 
 import { Config } from './Config';
 
+import { BaseConfitType } from '.';
+
 describe('Core configuration tests', () => {
   test('Should get a simple value', () => {
-    const config = new Config<FakeConfigurationSchema>(fakeConfigurationSchema);
+    const config = new Config<FakeConfigurationSchema & BaseConfitType>(
+      JSON.parse(JSON.stringify(fakeConfigurationSchema)),
+    );
     expect(config.get('jump:howHigh')).toBe(10);
     expect(config.get('jump')).toEqual(fakeConfigurationSchema.jump);
     expect(config.get('jump:over')).toEqual(fakeConfigurationSchema.jump.over);
+    expect(config.get('optional:notOptional')).toBe('I am not optional');
   });
 
   test('Should get a simple value', () => {
-    const config = new Config<FakeConfigurationSchema>(
+    const config = new Config<FakeConfigurationSchema & BaseConfitType>(
       JSON.parse(JSON.stringify(fakeConfigurationSchema)),
     );
     expect(config.get('jump:over:theMoon')).toBe(false);

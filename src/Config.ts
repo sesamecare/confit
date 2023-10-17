@@ -2,13 +2,12 @@ import { merge } from './common';
 
 import { BaseConfitType, IntermediateConfigValue } from '.';
 
-export type ConfitDeepKeys<T> = {
-  [P in keyof T]: P extends string
-    ? T[P] extends object
-      ? `${P}:${ConfitDeepKeys<T[P]>}` | P
-      : P
+type Expand<T> = T extends infer O ? { [K in keyof O]: O[K] } : never;
+
+export type ConfitDeepKeys<T> =
+  T extends object
+    ? { [P in keyof T]: `${string & P}:${ConfitDeepKeys<Expand<T[P]>>}` | string & P }[keyof T]
     : never;
-}[keyof T];
 
 export type ConfitPathValue<T, P extends string> = P extends `${infer K}:${infer Rest}`
   ? K extends keyof T
