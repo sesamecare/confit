@@ -1,6 +1,6 @@
 import { merge } from './common';
 
-import { IntermediateConfigValue } from '.';
+import { BaseConfitType, IntermediateConfigValue } from '.';
 
 export type ConfitDeepKeys<T> = {
   [P in keyof T]: P extends string
@@ -18,7 +18,7 @@ export type ConfitPathValue<T, P extends string> = P extends `${infer K}:${infer
   ? T[P]
   : never;
 
-export class Config<ConfigurationSchema extends object> {
+export class Config<ConfigurationSchema extends BaseConfitType> {
   constructor(private store: ConfigurationSchema = {} as ConfigurationSchema) {}
 
   private getValue<P extends ConfitDeepKeys<ConfigurationSchema>>(
