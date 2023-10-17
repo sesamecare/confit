@@ -1,3 +1,10 @@
+## [1.0.6](https://github.com/sesamecare/confit/compare/v1.0.5...v1.0.6) (2023-10-17)
+
+
+### Bug Fixes
+
+* **yaml:** hide yaml loadoptions type for a simpler version ([3722f7a](https://github.com/sesamecare/confit/commit/3722f7adb339c6ee55255818a84222093cb4ac2e))
+
 ## [1.0.5](https://github.com/sesamecare/confit/compare/v1.0.4...v1.0.5) (2023-10-17)
 
 
