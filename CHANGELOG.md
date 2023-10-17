@@ -1,3 +1,10 @@
+# [1.1.0](https://github.com/sesamecare/confit/compare/v1.0.6...v1.1.0) (2023-10-17)
+
+
+### Features
+
+* **types:** simplify base types ([8197c7f](https://github.com/sesamecare/confit/commit/8197c7f96b33bc314fbe18daed5062ed40417bcc))
+
 ## [1.0.6](https://github.com/sesamecare/confit/compare/v1.0.5...v1.0.6) (2023-10-17)
 
 
