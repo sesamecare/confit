@@ -1,0 +1,5 @@
+{
+    "name": "child",
+    "grandchild": "import:./grandchild",
+    "grandchildJson": "import:./grandchild.json"
+}

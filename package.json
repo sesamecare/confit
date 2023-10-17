@@ -51,6 +51,7 @@
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/exec": "^6.0.3",
     "@semantic-release/git": "^10.0.1",
+    "@types/caller": "^1.0.0",
     "@types/minimist": "^1.2.3",
     "@types/node": "^20.8.6",
     "@typescript-eslint/eslint-plugin": "^6.8.0",
@@ -64,6 +65,7 @@
     "vitest": "^0.34.6"
   },
   "dependencies": {
+    "caller": "^1.1.0",
     "comment-json": "^4.2.3",
     "minimist": "^1.2.8"
   }

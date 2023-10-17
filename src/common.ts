@@ -1,7 +1,11 @@
 import fs from 'fs/promises';
+import url from 'url';
 import Path from 'path';
 
+import caller from 'caller';
 import commentJson from 'comment-json';
+
+import { IntermediateConfigValue } from '.';
 
 export const environmentPatterns: Record<string, RegExp> = {
   development: /^dev/i,
@@ -10,7 +14,7 @@ export const environmentPatterns: Record<string, RegExp> = {
   production: /^prod/i,
 };
 
-export function isAbsolutePath(path: string) {
+export function isAbsolutePath(path?: string) {
   if (typeof path === 'string') {
     const normalized = Path.normalize(path);
     return normalized === Path.resolve(normalized);
@@ -18,7 +22,7 @@ export function isAbsolutePath(path: string) {
   return false;
 }
 
-function isObject(o: unknown) {
+export function isObject(o: unknown) {
   return o !== null && typeof o === 'object' && !Array.isArray(o);
 }
 
@@ -45,6 +49,29 @@ export function merge(src: any, dest: any) {
 }
 
 export async function loadJsonc(path: string) {
-  const content = await fs.readFile(path, 'utf-8');
-  return commentJson.parse(content);
+  let callingFilePath = caller();
+  let file = path;
+
+  /**
+   * When this module is required from esm, then caller()
+   * returns a path that's prefixed by `file:`.
+   * We need to remove it to avoid breakage.
+   */
+  if (callingFilePath.startsWith('file:')) {
+    callingFilePath = url.fileURLToPath(callingFilePath);
+  }
+
+  // on some occasions file is passed in with file prefix
+  if (file.startsWith('file:')) {
+    file = url.fileURLToPath(file);
+  }
+
+  let root = Path.resolve(callingFilePath);
+  root = Path.dirname(root);
+
+  let abs = Path.resolve(root, file);
+  abs = require.resolve(abs);
+
+  const content = await fs.readFile(abs, 'utf-8');
+  return commentJson.parse(content) as IntermediateConfigValue;
 }

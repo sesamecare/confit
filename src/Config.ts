@@ -1,3 +1,7 @@
+import { merge } from './common';
+
+import { IntermediateConfigValue } from '.';
+
 export type ConfitDeepKeys<T> = {
   [P in keyof T]: P extends string
     ? T[P] extends object
@@ -42,6 +46,10 @@ export class Config<ConfigurationSchema extends object> {
       throw new Error(`Expected value not found at "${path}"`);
     }
     return undefined as ConfitPathValue<ConfigurationSchema, P>;
+  }
+
+  getUntypedValue(path: string) {
+    return this.getValue(path as ConfitDeepKeys<ConfigurationSchema>, false);
   }
 
   /**
@@ -108,5 +116,37 @@ export class Config<ConfigurationSchema extends object> {
     }
 
     return;
+  }
+
+  setUntyped(path: string, value: IntermediateConfigValue) {
+    const pathParts = path.split(':');
+    let current: object = this.store as object;
+    while (pathParts.length - 1) {
+      const prop = pathParts.shift() as string;
+      if (!Object.prototype.hasOwnProperty.call(current, prop)) {
+        (current as Record<string, object>)[prop] = {};
+      }
+
+      current = (current as Record<string, object>)[prop];
+      if (current?.constructor !== Object) {
+        // Do not allow traversal into complex types,
+        // such as Buffer, Date, etc. So, this type
+        // of key will fail: 'foo:mystring:length'
+        return;
+      }
+    }
+    (current as Record<string, typeof value>)[pathParts.shift() as string] = value;
+  }
+
+  use(config: Partial<ConfigurationSchema>) {
+    return merge(config, this.store);
+  }
+
+  merge(config: Config<ConfigurationSchema>) {
+    return this.use(config.store);
+  }
+
+  toJSON() {
+    return JSON.stringify(this.store);
   }
 }

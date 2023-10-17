@@ -430,10 +430,12 @@ __metadata:
     "@semantic-release/changelog": ^6.0.3
     "@semantic-release/exec": ^6.0.3
     "@semantic-release/git": ^10.0.1
+    "@types/caller": ^1.0.0
     "@types/minimist": ^1.2.3
     "@types/node": ^20.8.6
     "@typescript-eslint/eslint-plugin": ^6.8.0
     "@typescript-eslint/parser": ^6.8.0
+    caller: ^1.1.0
     coconfig: ^1.0.0
     comment-json: ^4.2.3
     eslint: ^8.51.0
@@ -485,6 +487,13 @@ __metadata:
   version: 1.0.4
   resolution: "@tsconfig/node16@npm:1.0.4"
   checksum: 202319785901f942a6e1e476b872d421baec20cf09f4b266a1854060efbf78cde16a4d256e8bc949d31e6cd9a90f1e8ef8fb06af96a65e98338a2b6b0de0a0ff
+  languageName: node
+  linkType: hard
+
+"@types/caller@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "@types/caller@npm:1.0.0"
+  checksum: a5a3ff16980b9149796565c0c21ca37f954a5d7fe22c62926b485b5ba7cbae61086a0860e259366e4412cd97bc25cd7b610a02c0be0c03ec2c353c46bf21cfac
   languageName: node
   linkType: hard
 
@@ -1044,6 +1053,13 @@ __metadata:
     function-bind: ^1.1.1
     get-intrinsic: ^1.0.2
   checksum: f8e31de9d19988a4b80f3e704788c4a2d6b6f3d17cfec4f57dc29ced450c53a49270dc66bf0fbd693329ee948dd33e6c90a329519aef17474a4d961e8d6426b0
+  languageName: node
+  linkType: hard
+
+"caller@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "caller@npm:1.1.0"
+  checksum: ef0bf44b0a84cb4a09a774b7ac6674b48e4a7812e3e6b107635acd18021a0493b331719c0e4e84158d68e7ad5b742980d162ccdab8113684599db21110c41732
   languageName: node
   linkType: hard
 
