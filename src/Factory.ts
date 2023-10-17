@@ -8,10 +8,10 @@ import { isAbsolutePath, loadJsonc, merge } from './common';
 import { argv, convenience, environmentVariables } from './provider';
 import { resolveConfig, resolveCustom, resolveImport } from './handlers';
 
-export class Factory<ConfigurationType extends object> {
+export class Factory<ConfigurationType extends BaseConfitType> {
   private basedir: string;
   private protocols: ConfitOptions['protocols'];
-  private promise: Promise<ConfigurationType & BaseConfitType>;
+  private promise: Promise<ConfigurationType>;
 
   constructor(options: ConfitOptions) {
     const excludedEnvVariables = [...(options.excludeEnvVariables || []), 'env'];
@@ -51,13 +51,13 @@ export class Factory<ConfigurationType extends object> {
 
   private add(
     fileOrDirOrConfig: string | Partial<ConfigurationType>,
-    fn: (store: ConfigurationType, update: ConfigurationType) => ConfigurationType & BaseConfitType,
+    fn: (store: ConfigurationType, update: ConfigurationType) => ConfigurationType,
   ) {
     const dataPromise = this.resolveFile(fileOrDirOrConfig).then((data) =>
       resolveImport(data, this.basedir),
     );
     this.promise = Promise.all([this.promise, dataPromise]).then(([store, data]) =>
-      fn(store, data as ConfigurationType & BaseConfitType),
+      fn(store, data as ConfigurationType),
     );
   }
 
@@ -76,7 +76,7 @@ export class Factory<ConfigurationType extends object> {
       .then((store) => resolveImport(store, this.basedir))
       .then((store) => resolveCustom(store, this.protocols))
       .then((store) => resolveConfig(store));
-    return new Config<ConfigurationType & BaseConfitType>(finalStore as ConfigurationType & BaseConfitType);
+    return new Config<ConfigurationType>(finalStore as ConfigurationType);
   }
 
   static conditional<ConfigurationType extends BaseConfitType, R>(
