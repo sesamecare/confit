@@ -6,7 +6,7 @@ export function confit<ConfigurationType extends object>(options?: ConfitOptions
   return new Factory<ConfigurationType>(options || {});
 }
 
-export type Confit<ConfigSchema extends BaseConfitType> = Config<ConfigSchema>;
+export type Confit<ConfigSchema> = Config<ConfigSchema & BaseConfitType>;
 
 export * from './Factory';
 export * from './types';
