@@ -5,6 +5,13 @@ import { glob, type GlobOptions } from 'glob';
 import yaml from 'js-yaml';
 import caller from 'caller';
 
+interface LoadOptions {
+  /** string to be used as a file path in error/warning messages. */
+  filename?: string | undefined;
+  /** compatibility with JSON.parse behaviour. */
+  json?: boolean | undefined;
+}
+
 (function expandModulePaths() {
   // If this module is deployed outside the app's node_modules, it wouldn't be
   // able to resolve other modules deployed under app while evaluating this shortstops.
@@ -75,7 +82,7 @@ export function requireHandler(basedir?: string): ReturnType<typeof require> {
 /**
  * Load a YAML file and return the parsed content.
  */
-export function yamlHandler(basedir?: string, options: yaml.LoadOptions = {}) {
+export function yamlHandler(basedir?: string, options: LoadOptions = {}) {
   const resolver = pathHandler(basedir);
 
   return async function yamlParser(value: string) {
