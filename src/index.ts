@@ -10,3 +10,4 @@ export type Confit<ConfigSchema extends BaseConfitType> = Config<ConfigSchema>;
 
 export * from './Factory';
 export * from './types';
+export * from './shortstop';
