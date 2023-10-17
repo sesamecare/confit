@@ -82,7 +82,7 @@ export function yamlHandler(basedir?: string, options: yaml.LoadOptions = {}) {
     const filename = resolver(value);
 
     const content = await fs.readFile(filename, 'utf8');
-    return yaml.load(content, { ...options, filename });
+    return yaml.load(content, { ...options, filename }) as ReturnType<typeof JSON.parse>;
   };
 }
 
@@ -103,7 +103,7 @@ export function execHandler(basedir?: string) {
 }
 
 export function globHandler(optionsOrCwd?: GlobOptions | string) {
-  const options = typeof optionsOrCwd === 'string' ? { cwd: optionsOrCwd } : (optionsOrCwd || {});
+  const options = typeof optionsOrCwd === 'string' ? { cwd: optionsOrCwd } : optionsOrCwd || {};
   options.cwd = options.cwd || Path.dirname(caller());
 
   const resolvePath = pathHandler(options.cwd.toString());
