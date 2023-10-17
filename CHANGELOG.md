@@ -1,3 +1,10 @@
+## [1.0.1](https://github.com/sesamecare/confit/compare/v1.0.0...v1.0.1) (2023-10-17)
+
+
+### Bug Fixes
+
+* **types:** export a Confit type ([9c549e3](https://github.com/sesamecare/confit/commit/9c549e3bea91433775c7f4b54c672a22dde18ee3))
+
 # 1.0.0 (2023-10-17)
 
 
