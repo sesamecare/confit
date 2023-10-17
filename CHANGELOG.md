@@ -1,0 +1,16 @@
+# 1.0.0 (2023-10-17)
+
+
+### Bug Fixes
+
+* **loader:** implement most basic loading methods ([027ded7](https://github.com/sesamecare/confit/commit/027ded71be013b6b39e0a4e55ddfb6375285fe1c))
+* **set:** add set method ([46b0050](https://github.com/sesamecare/confit/commit/46b0050e032f6443a10a9a0bb3f64e2b14289f18))
+* **shortstop:** bundle more shortstop handlers, add tests, release ([609b9b6](https://github.com/sesamecare/confit/commit/609b9b63cb3c94902bbd93209070a6fa34baf7e8))
+* **tests:** add many more tests ([725376b](https://github.com/sesamecare/confit/commit/725376bb9280f832799edfdbe72d2760db76377a))
+* **tests:** oh so many tests ([ca2fb35](https://github.com/sesamecare/confit/commit/ca2fb35964861ee7f772bf285fc595a3e4ac8857))
+* **token:** update token for publishing ([27a55db](https://github.com/sesamecare/confit/commit/27a55db74ecb347b7a72add2ae3c229eb7f557c3))
+
+
+### Features
+
+* **get:** typed get works ([6f877b6](https://github.com/sesamecare/confit/commit/6f877b622b5969c3aaee1240f6109369b70982fe))
