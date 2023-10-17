@@ -70,6 +70,7 @@ class ShortstopHandlers {
     }
 
     handler.stack.push(implementation as ShortstopHandler);
+
     let removed = false;
     return function unuse() {
       let idx;
@@ -109,6 +110,7 @@ class ShortstopHandlers {
       if (!handler) {
         return data;
       }
+
       const stack = this.getStack(handler.protocol);
       if (!stack) {
         return data;

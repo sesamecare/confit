@@ -6,7 +6,10 @@ export type ShortstopHandler<Input = unknown, Output = unknown> = (
 export interface ConfitOptions {
   defaults?: string;
   basedir?: string;
-  protocols?: Record<string, ShortstopHandler | ShortstopHandler[]>;
+  protocols?: Record<
+    string,
+    ShortstopHandler | ShortstopHandler[] | ShortstopHandler<string> | ShortstopHandler<string>[]
+  >;
   excludeEnvVariables?: string[];
 }
 
@@ -20,4 +23,11 @@ export interface BaseConfitType {
   };
 }
 
-export type IntermediateConfigValue = object | string | number | boolean | null | undefined | IntermediateConfigValue[];
+export type IntermediateConfigValue =
+  | object
+  | string
+  | number
+  | boolean
+  | null
+  | undefined
+  | IntermediateConfigValue[];

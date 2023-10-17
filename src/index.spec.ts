@@ -299,198 +299,131 @@ describe('confit', () => {
     expect(config.get('tic:tac')).toBe('toe');
     expect(config.get('blue')).toBe(true);
   });
+
+  test('protocols', async () => {
+    process.env.NODE_ENV = 'dev';
+    const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
+    const config = await confit<{
+      misc: string;
+      path: string;
+    }>({
+      basedir,
+      protocols: {
+        path: (value: string) => path.join(basedir, value),
+      },
+    }).create();
+    expect(config.get('misc')).toBe(path.join(basedir, 'config.json'));
+    expect(config.get('path')).toBe(path.join(basedir, 'development.json'));
+
+    config.use({ path: __filename });
+    expect(config.get('path')).toBe(__filename);
+  });
+
+  test('protocols (array)', async () => {
+    process.env.NODE_ENV = 'dev';
+    const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
+    const options = {
+      basedir,
+      protocols: {
+        path: [(value: string) => path.join(basedir, value), (value: string) => value + '!'],
+      },
+    };
+
+    const config = await confit<{
+      misc: string;
+      path: string;
+    }>(options).create();
+    expect(config.get('misc')).toBe(path.join(basedir, 'config.json!'));
+    expect(config.get('path')).toBe(path.join(basedir, 'development.json!'));
+
+    config.use({ path: __filename });
+    expect(config.get('path')).toBe(__filename);
+  });
+
+  test('error', async () => {
+    process.env.NODE_ENV = 'dev';
+    const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
+    const options = {
+      basedir,
+      protocols: {
+        path: () => {
+          throw new Error('path');
+        },
+      },
+    };
+    await expect(confit(options).create()).rejects.toThrow();
+  });
+
+  test('malformed', async () => {
+    const basedir = path.join(__dirname, '..', '__tests__', 'malformed');
+    await expect(confit({ basedir }).create()).rejects.toThrow();
+  });
+
+  test('addOverride', async () => {
+    process.env.NODE_ENV = 'test';
+    const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
+    const config = await confit<{
+      default: string;
+      override: string;
+    }>({ basedir })
+      .addOverride('development.json')
+      .addOverride(path.join(basedir, 'supplemental.json'))
+      .create();
+
+    expect(config.get('default')).toBe('config');
+    expect(config.get('override')).toBe('supplemental');
+  });
+
+  test('addOverride error', () => {
+    const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
+    expect(() => confit({ basedir }).addOverride('nonexistent.json').create()).rejects.toThrow();
+    expect(() => confit({ basedir }).addOverride('malformed.json').create()).rejects.toThrow();
+  });
+
+  test('import: with merging objects in imported files', async () => {
+    const basedir = path.join(__dirname, '..', '__tests__', 'import');
+    const config = await confit({ basedir }).addDefault('override.json').create();
+
+    expect(config.getUntypedValue('child:grandchild:secret')).toBe('santa');
+    expect(config.getUntypedValue('child:grandchild:name')).toBe('grandchild');
+    expect(config.getUntypedValue('child:grandchild:another')).toBe('claus');
+  });
+
+  test('precedence', async () => {
+    const argv = process.argv;
+    const env = process.env;
+    process.argv = ['node', __filename, '--override=argv'];
+    process.env = {
+      NODE_ENV: 'development',
+      override: 'env',
+      misc: 'env',
+    };
+
+    const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
+    const factory = confit<{ override: string; misc: string }>({ basedir });
+    const config = await factory.create();
+    expect(config.get('override')).toBe('argv');
+    expect(config.get('misc')).toBe('env');
+    process.argv = argv;
+    process.env = env;
+  });
+
+  test('env ignore', async () => {
+    const env = (process.env = {
+      NODE_ENV: 'development',
+      fromlocal: 'config:local',
+      local: 'motion',
+      ignoreme: 'file:./path/to/mindyourbusiness',
+    });
+    const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
+    const config = await confit<{
+      fromlocal: string;
+      ignoreme?: string;
+    }>({
+      basedir,
+      excludeEnvVariables: ['ignoreme'],
+    }).create();
+    expect(config.get('fromlocal')).toBe(env.local);
+    expect(config.get('ignoreme')).toBeUndefined();
+  });
 });
-
-/*
-    t.test('protocols', function (t) {
-        var basedir, options;
-
-        process.env.NODE_ENV = 'dev';
-        basedir = path.join(__dirname, 'fixtures', 'defaults');
-        options = {
-            basedir: basedir,
-            protocols: {
-                path: function (value) {
-                    return path.join(basedir, value);
-                }
-            }
-        };
-
-        confit(options).create(function (err, config) {
-            t.error(err);
-            // Ensure handler was run correctly on default file
-            t.equal(config.get('misc'), path.join(basedir, 'config.json'));
-            t.equal(config.get('path'), path.join(basedir, 'development.json'));
-
-            config.use({ path: __filename });
-            t.equal(config.get('path'), __filename);
-            t.end();
-        });
-    });
-
-
-    t.test('protocols (array)', function (t) {
-        var basedir, options;
-
-        process.env.NODE_ENV = 'dev';
-        basedir = path.join(__dirname, 'fixtures', 'defaults');
-        options = {
-            basedir: basedir,
-            protocols: {
-                path: [
-                    function (value) {
-                        return path.join(basedir, value);
-                    },
-                    function (value) {
-                        return value + '!';
-                    }
-                ]
-            }
-        };
-
-        confit(options).create(function (err, config) {
-            t.error(err);
-            // Ensure handler was run correctly on default file
-            t.equal(config.get('misc'), path.join(basedir, 'config.json!'));
-            t.equal(config.get('path'), path.join(basedir, 'development.json!'));
-
-            config.use({ path: __filename });
-            t.equal(config.get('path'), __filename);
-            t.end();
-        });
-    });
-
-
-    t.test('error', function (t) {
-        var basedir, options;
-
-        process.env.NODE_ENV = 'dev';
-        basedir = path.join(__dirname, 'fixtures', 'defaults');
-        options = {
-            basedir: basedir,
-            protocols: {
-                path: function (value) {
-                    throw new Error('path');
-                }
-            }
-        };
-
-        confit(options).create(function (err, config) {
-            t.ok(err);
-            t.notOk(config);
-            t.end();
-        });
-    });
-
-
-    t.test('malformed', function (t) {
-        var basedir = path.join(__dirname, 'fixtures', 'malformed');
-        confit(basedir).create(function (err, config) {
-            t.ok(err);
-            t.notOk(config);
-            t.end();
-        });
-    });
-
-
-    t.test('addOverride', function (t) {
-        var basedir, factory;
-
-        process.env.NODE_ENV = 'test';
-        basedir = path.join(__dirname, 'fixtures', 'defaults');
-
-        factory = confit(basedir);
-        factory.addOverride('development.json');
-        factory.addOverride(path.join(basedir, 'supplemental.json'));
-        factory.create(function (err, config) {
-            t.error(err);
-            t.ok(config);
-            t.equal(config.get('default'), 'config');
-            t.equal(config.get('override'), 'supplemental');
-            t.end();
-        });
-    });
-
-
-    t.test('addOverride error', function (t) {
-        var basedir;
-
-
-        t.throws(function () {
-            confit(path.join(__dirname, 'fixtures', 'defaults'))
-                .addOverride('nonexistent.json');
-        });
-
-        t.throws(function () {
-            confit(path.join(__dirname, 'fixtures', 'defaults'))
-                .addOverride('malformed.json');
-        });
-
-        t.end();
-    });
-
-    t.test('import: with merging objects in imported files', function(t) {
-
-        var basedir = path.join(__dirname, 'fixtures', 'import');
-        var factory = confit(basedir);
-        factory.addDefault('override.json');
-
-        factory.create(function(err, config) {
-            t.error(err);
-            t.ok(config);
-            t.equal(config.get('child:grandchild:secret'), 'santa');
-            t.equal(config.get('child:grandchild:name'), 'grandchild');
-            t.equal(config.get('child:grandchild:another'), 'claus');
-            t.end();
-        });
-    });
-
-    t.test('precedence', function (t) {
-        var factory;
-        var argv = process.argv;
-        var env = process.env;
-
-        process.argv = [ 'node', __filename, '--override=argv'];
-        process.env = {
-            NODE_ENV: 'development',
-            override: 'env',
-            misc: 'env'
-        };
-
-        factory = confit(path.join(__dirname, 'fixtures', 'defaults'));
-        factory.create(function (err, config) {
-            t.error(err);
-            t.ok(config);
-            t.equal(config.get('override'), 'argv');
-            t.equal(config.get('misc'), 'env');
-            process.argv = argv;
-            process.env = env;
-            t.end();
-        });
-    });
-    t.test('env ignore', function (t) {
-        var basedir, options;
-
-        var env = process.env = {
-            NODE_ENV: 'development',
-            fromlocal: 'config:local',
-            local: 'motion',
-            ignoreme: 'file:./path/to/mindyourbusiness'
-        };
-        basedir = path.join(__dirname, 'fixtures', 'defaults');
-        options = {
-            basedir: basedir,
-            envignore: ['ignoreme']
-        };
-
-        confit(options).create(function (err, config) {
-            t.error(err);
-            // Ensure env is read except for the desired ignored property
-            t.equal(config.get('fromlocal'), env.local);
-            t.equal(config.get('ignoreme'), undefined);
-            t.end();
-        });
-    });
-
-    t.end();
-});*/

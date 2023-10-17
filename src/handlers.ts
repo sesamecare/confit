@@ -60,9 +60,7 @@ export async function resolveCustom(
   for (const protocol of Object.keys(protocols)) {
     const impls = protocols[protocol];
     if (Array.isArray(impls)) {
-      for (const impl of impls) {
-        shorty.use(protocol, impl);
-      }
+      impls.forEach((impl) => shorty.use(protocol, impl));
     } else {
       shorty.use(protocol, impls);
     }

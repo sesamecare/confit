@@ -2,7 +2,7 @@ import path from 'path';
 
 import caller from 'caller';
 
-import { BaseConfitType, ConfitOptions, IntermediateConfigValue, ShortstopHandler } from './types';
+import { BaseConfitType, ConfitOptions, IntermediateConfigValue } from './types';
 import { Config } from './Config';
 import { isAbsolutePath, loadJsonc, merge } from './common';
 import { argv, convenience, environmentVariables } from './provider';
@@ -10,7 +10,7 @@ import { resolveConfig, resolveCustom, resolveImport } from './handlers';
 
 export class Factory<ConfigurationType extends object> {
   private basedir: string;
-  private protocols: Record<string, ShortstopHandler | ShortstopHandler[]>;
+  private protocols: ConfitOptions['protocols'];
   private promise: Promise<ConfigurationType & BaseConfitType>;
 
   constructor(options: ConfitOptions) {
