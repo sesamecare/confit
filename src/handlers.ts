@@ -1,7 +1,9 @@
 import { createShortstopHandlers } from './shortstop';
 import { pathHandler } from './shortstop/fileHandlers';
-import { ConfitOptions, IntermediateConfigValue } from './types';
+import { ConfitOptions } from './types';
 import { loadJsonc } from './common';
+
+type IntermediateConfigValue = ReturnType<typeof JSON.parse>;
 
 export async function resolveConfig(
   inputData: IntermediateConfigValue,

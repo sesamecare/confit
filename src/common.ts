@@ -5,8 +5,6 @@ import Path from 'path';
 import caller from 'caller';
 import commentJson from 'comment-json';
 
-import { IntermediateConfigValue } from '.';
-
 export const environmentPatterns: Record<string, RegExp> = {
   development: /^dev/i,
   test: /^test/i,
@@ -73,5 +71,5 @@ export async function loadJsonc(path: string) {
   abs = require.resolve(abs);
 
   const content = await fs.readFile(abs, 'utf-8');
-  return commentJson.parse(content) as IntermediateConfigValue;
+  return commentJson.parse(content) as ReturnType<typeof JSON.parse>;
 }

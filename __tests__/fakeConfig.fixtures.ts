@@ -1,6 +1,6 @@
-import { BaseConfitType } from '../src/types';
+import { BaseConfitSchema } from '../src/types';
 
-export interface FakeConfigurationSchema extends BaseConfitType {
+export interface FakeConfigurationSchema extends BaseConfitSchema {
   jump: {
     howHigh: number;
     over: {

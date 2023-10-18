@@ -9,23 +9,23 @@ describe('Core configuration tests', () => {
     const config = new Config<FakeConfigurationSchema>(
       JSON.parse(JSON.stringify(fakeConfigurationSchema)),
     );
-    expect(config.get('jump:howHigh')).toBe(10);
-    expect(config.get('jump')).toEqual(fakeConfigurationSchema.jump);
-    expect(config.get('jump:over')).toEqual(fakeConfigurationSchema.jump.over);
-    expect(config.get('optional:notOptional')).toBe('I am not optional');
+    expect(config.get().jump.howHigh).toBe(10);
+    expect(config.get().jump).toEqual(fakeConfigurationSchema.jump);
+    expect(config.get().jump.over).toEqual(fakeConfigurationSchema.jump.over);
+    expect(config.get().optional.notOptional).toBe('I am not optional');
   });
 
   test('Should get a simple value', () => {
     const config = new Config<FakeConfigurationSchema>(
       JSON.parse(JSON.stringify(fakeConfigurationSchema)),
     );
-    expect(config.get('jump:over:theMoon')).toBe(false);
-    config.set('jump:over', { theMoon: true });
-    expect(config.get('jump:over:theMoon')).toBe(true);
+    expect(config.get().jump.over.theMoon).toBe(false);
+    config.get().jump.over = { theMoon: true };
+    expect(config.get().jump.over.theMoon).toBe(true);
 
-    config.set('jump:howHigh', 20);
-    expect(config.get('jump:howHigh')).toBe(20);
-    expect(config.get('jump')).toEqual({
+    config.get().jump.howHigh = 20;
+    expect(config.get().jump.howHigh).toBe(20);
+    expect(config.get().jump).toEqual({
       howHigh: 20,
       over: {
         theMoon: true,

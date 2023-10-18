@@ -13,7 +13,7 @@ export interface ConfitOptions {
   excludeEnvVariables?: string[];
 }
 
-export interface BaseConfitType {
+export interface BaseConfitSchema {
   env: {
     env: string;
     test: boolean;
@@ -22,12 +22,3 @@ export interface BaseConfitType {
     production: boolean;
   };
 }
-
-export type IntermediateConfigValue =
-  | object
-  | string
-  | number
-  | boolean
-  | null
-  | undefined
-  | IntermediateConfigValue[];

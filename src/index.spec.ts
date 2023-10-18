@@ -2,7 +2,7 @@ import path from 'path';
 
 import { afterAll, describe, expect, test } from 'vitest';
 
-import { confit } from './index';
+import { BaseConfitSchema, confit } from './index';
 
 describe('confit', () => {
   const originalEnv = process.env.NODE_ENV;
@@ -19,7 +19,6 @@ describe('confit', () => {
     const factory = confit();
     const config = await factory.create();
     expect(typeof config.get).toBe('function');
-    expect(typeof config.set).toBe('function');
     expect(typeof config.use).toBe('function');
   });
 
@@ -29,80 +28,11 @@ describe('confit', () => {
     process.env.env = 'development';
 
     const config = await confit().create();
-    expect(typeof config.get('env'), 'should return object for env').toBe('object');
-    expect(typeof config.get('env:env'), 'should return string for env:env').toBe('string');
-    expect(
-      config.getUntypedValue('env:env:length'),
-      'should return undefined for env:env:length',
-    ).toBeUndefined();
-    expect(typeof config.get('env:development'), 'should return boolean for env:development').toBe(
+    expect(typeof config.get().env, 'should return object for env').toBe('object');
+    expect(typeof config.get().env.env, 'should return string for env:env').toBe('string');
+    expect(typeof config.get().env.development, 'should return boolean for env:development').toBe(
       'boolean',
     );
-    expect(config.getUntypedValue('env:a'), 'should return undefined for env:a').toBeUndefined();
-    expect(config.getUntypedValue('a'), 'should return undefined for a').toBeUndefined();
-    expect(config.getUntypedValue('a:b'), 'should return undefined for a:b').toBeUndefined();
-    expect(config.getUntypedValue('a:b:c'), 'should return undefined for a:b:c').toBeUndefined();
-    expect(
-      config.getUntypedValue(undefined as unknown as string),
-      'should return undefined for undefined key',
-    ).toBeUndefined();
-    expect(
-      config.getUntypedValue(null as unknown as string),
-      'should return undefined for null key',
-    ).toBeUndefined();
-    expect(
-      config.getUntypedValue(''),
-      'should return undefined for empty string key',
-    ).toBeUndefined();
-    expect(
-      config.getUntypedValue(false as unknown as string),
-      'should return undefined for false key',
-    ).toBeUndefined();
-  });
-
-  test('set', async () => {
-    const config = await confit<{
-      foo: string;
-      new: { thing: string };
-      my: { prop: number };
-      thing: { isEnabled: boolean };
-      another: { obj: { with: string } };
-      arr: number[];
-    }>().create();
-    config.set('foo', 'bar');
-    expect(config.get('foo'), 'bar');
-
-    config.setUntyped('foo:bar', 'baz');
-    expect(config.get('foo:bar')).toBeUndefined();
-
-    config.set('new:thing', 'foo');
-    expect(config.get('new:thing')).toBe('foo');
-
-    config.set('my:prop', 10);
-    expect(config.get('my:prop')).toBe(10);
-
-    config.set('thing:isEnabled', true);
-    expect(config.get('thing:isEnabled')).toBe(true);
-
-    config.set('thing:isEnabled', false);
-    expect(config.get('thing:isEnabled')).toBe(false);
-
-    // Test non-primitives
-    config.set('another:obj', { with: 'prop' });
-    expect(config.get('another:obj').with).toBe('prop');
-    expect(config.get('another:obj:with')).toBe('prop');
-
-    // Try out arrays
-    config.set('arr', [0, 1, 2]);
-    const val = config.get('arr');
-    expect(Array.isArray(val)).toBe(true);
-    expect(val[0]).toBe(0);
-    expect(val[1]).toBe(1);
-    expect(val[2]).toBe(2);
-
-    // Fail to mess with arrays like this
-    config.setUntyped('arr:0', 'a');
-    expect(config.get('arr')[0]).toBe(0);
   });
 
   test('use', async () => {
@@ -110,15 +40,14 @@ describe('confit', () => {
       foo: { bar: string };
       bar: string;
       arr: (number | string)[];
-    }>().create();
+    } & BaseConfitSchema>().create();
     config.use({ foo: { bar: 'baz' } });
 
-    expect(typeof config.get('foo')).toBe('object');
-    expect(config.get('foo').bar).toBe('baz');
-    expect(config.get('foo:bar')).toBe('baz');
+    expect(typeof config.get().foo).toBe('object');
+    expect(config.get().foo.bar).toBe('baz');
 
     config.use({ arr: [0, 1, 2] });
-    let val = config.get('arr');
+    let val = config.get().arr;
     expect(Array.isArray(val)).toBe(true);
     expect(val[0]).toEqual(0);
     expect(val[1]).toEqual(1);
@@ -126,7 +55,7 @@ describe('confit', () => {
 
     // Arrays are not merged
     config.use({ arr: ['a', 'b', 'c', 'd'] });
-    val = config.get('arr');
+    val = config.get().arr;
     expect(Array.isArray(val)).toBe(true);
     expect(val[0]).toBe('a');
     expect(val[1]).toBe('b');
@@ -147,11 +76,11 @@ describe('confit', () => {
           name: string;
         };
       };
-    }>({ basedir }).create();
-    expect(config.get('name')).toBe('parent');
-    expect(config.get('child:name')).toBe('child');
-    expect(config.get('child:grandchild:name')).toBe('grandchild');
-    expect(config.get('child:grandchildJson:name')).toBe('grandchild');
+    } & BaseConfitSchema>({ basedir }).create();
+    expect(config.get().name).toBe('parent');
+    expect(config.get().child.name).toBe('child');
+    expect(config.get().child.grandchild.name).toBe('grandchild');
+    expect(config.get().child.grandchildJson.name).toBe('grandchild');
   });
 
   test('missing file import', async () => {
@@ -179,12 +108,12 @@ describe('confit', () => {
       };
       path: { to: { nested: { value: string } } };
       value: string;
-    }>({ basedir }).create();
-    expect(config.get('name')).toBe('config');
-    expect(config.get('foo')).toBe(config.get('imported:foo'));
-    expect(config.get('bar')).toBe(config.get('foo'));
-    expect(config.get('path:to:nested:value')).toEqual(config.get('value'));
-    expect(config.get('baz')).toEqual(config.get('path:to:nested:value'));
+    } & BaseConfitSchema>({ basedir }).create();
+    expect(config.get().name).toBe('config');
+    expect(config.get().foo).toBe(config.get().imported.foo);
+    expect(config.get().bar).toBe(config.get().foo);
+    expect(config.get().path.to.nested.value).toEqual(config.get().value);
+    expect(config.get().baz).toEqual(config.get().path.to.nested.value);
   });
 
   test('default file import', async () => {
@@ -198,21 +127,21 @@ describe('confit', () => {
           name: string;
         };
       };
-    }>({ basedir })
+    } & BaseConfitSchema>({ basedir })
       .addDefault('./default.json')
       .create();
-    expect(config.get('name')).toBe('parent');
-    expect(config.get('foo')).toBe('bar');
-    expect(config.get('child:name')).toBe('child');
-    expect(config.get('child:grandchild:name')).toBe('grandchild');
+    expect(config.get().name).toBe('parent');
+    expect(config.get().foo).toBe('bar');
+    expect(config.get().child.name).toBe('child');
+    expect(config.get().child.grandchild.name).toBe('grandchild');
   });
 
   test('missing config value', async () => {
     const basedir = path.join(__dirname, '..', '__tests__', 'config');
-    const config = await confit<{ foo: undefined }>({ basedir })
+    const config = await confit<{ foo: undefined } & BaseConfitSchema>({ basedir })
       .addOverride('./error.json')
       .create();
-    expect(config.get('foo')).toBeUndefined();
+    expect(config.get().foo).toBeUndefined();
   });
 
   test('merge', async () => {
@@ -231,18 +160,18 @@ describe('confit', () => {
     const config = await confit<{
       default: string;
       override: string;
-    }>({ basedir }).create();
+    } & BaseConfitSchema>({ basedir }).create();
 
     // File-based overrides
-    expect(config.get('default')).toBe('config');
-    expect(config.get('override')).toBe('config');
+    expect(config.get().default).toBe('config');
+    expect(config.get().override).toBe('config');
 
     // Manual overrides
-    config.set('override', 'runtime');
-    expect(config.get('override')).toBe('runtime');
+    config.get().override = 'runtime';
+    expect(config.get().override).toBe('runtime');
 
     config.use({ override: 'literal' });
-    expect(config.get('override')).toBe('literal');
+    expect(config.get().override).toBe('literal');
   });
 
   test('overrides', async () => {
@@ -252,22 +181,22 @@ describe('confit', () => {
     const config = await confit<{
       default: string;
       override: string;
-    }>({ basedir }).create();
+    } & BaseConfitSchema>({ basedir }).create();
     // File-based overrides
-    expect(config.get('default')).toBe('config');
-    expect(config.get('override')).toBe('development');
+    expect(config.get().default).toBe('config');
+    expect(config.get().override).toBe('development');
 
     // Manual overrides
-    config.set('override', 'runtime');
-    expect(config.get('override')).toBe('runtime');
+    config.get().override = 'runtime';
+    expect(config.get().override).toBe('runtime');
 
     config.use({ override: 'literal' });
-    expect(config.get('override')).toBe('literal');
+    expect(config.get().override).toBe('literal');
   });
 
   test('confit addOverride as json object', async () => {
     const basedir = path.join(__dirname, '..', '__tests__', 'config');
-    const config = await confit<{ name: string; foo?: string; tic: { tac: string } }>({ basedir })
+    const config = await confit<{ name: string; foo?: string; tic: { tac: string } } & BaseConfitSchema>({ basedir })
       .addOverride({
         tic: {
           tac: 'toe',
@@ -275,9 +204,9 @@ describe('confit', () => {
         foo: 'bar',
       })
       .create();
-    expect(config.get('tic:tac')).toBe('toe');
-    expect(config.get('foo')).toBe('bar');
-    expect(config.get('name')).toBe('config');
+    expect(config.get().tic.tac).toBe('toe');
+    expect(config.get().foo).toBe('bar');
+    expect(config.get().name).toBe('config');
   });
 
   test('confit without files, using just json objects', async () => {
@@ -285,7 +214,7 @@ describe('confit', () => {
       foo: 'bar';
       tic: { tac: string };
       blue: boolean;
-    }>()
+    } & BaseConfitSchema>()
       .addDefault({
         foo: 'bar',
         tic: {
@@ -295,9 +224,9 @@ describe('confit', () => {
       })
       .addOverride({ blue: true })
       .create();
-    expect(config.get('foo')).toBe('bar');
-    expect(config.get('tic:tac')).toBe('toe');
-    expect(config.get('blue')).toBe(true);
+    expect(config.get().foo).toBe('bar');
+    expect(config.get().tic.tac).toBe('toe');
+    expect(config.get().blue).toBe(true);
   });
 
   test('protocols', async () => {
@@ -306,17 +235,17 @@ describe('confit', () => {
     const config = await confit<{
       misc: string;
       path: string;
-    }>({
+    } & BaseConfitSchema>({
       basedir,
       protocols: {
         path: (value: string) => path.join(basedir, value),
       },
     }).create();
-    expect(config.get('misc')).toBe(path.join(basedir, 'config.json'));
-    expect(config.get('path')).toBe(path.join(basedir, 'development.json'));
+    expect(config.get().misc).toBe(path.join(basedir, 'config.json'));
+    expect(config.get().path).toBe(path.join(basedir, 'development.json'));
 
     config.use({ path: __filename });
-    expect(config.get('path')).toBe(__filename);
+    expect(config.get().path).toBe(__filename);
   });
 
   test('protocols (array)', async () => {
@@ -332,12 +261,12 @@ describe('confit', () => {
     const config = await confit<{
       misc: string;
       path: string;
-    }>(options).create();
-    expect(config.get('misc')).toBe(path.join(basedir, 'config.json!'));
-    expect(config.get('path')).toBe(path.join(basedir, 'development.json!'));
+    } & BaseConfitSchema>(options).create();
+    expect(config.get().misc).toBe(path.join(basedir, 'config.json!'));
+    expect(config.get().path).toBe(path.join(basedir, 'development.json!'));
 
     config.use({ path: __filename });
-    expect(config.get('path')).toBe(__filename);
+    expect(config.get().path).toBe(__filename);
   });
 
   test('error', async () => {
@@ -365,13 +294,13 @@ describe('confit', () => {
     const config = await confit<{
       default: string;
       override: string;
-    }>({ basedir })
+    } & BaseConfitSchema>({ basedir })
       .addOverride('development.json')
       .addOverride(path.join(basedir, 'supplemental.json'))
       .create();
 
-    expect(config.get('default')).toBe('config');
-    expect(config.get('override')).toBe('supplemental');
+    expect(config.get().default).toBe('config');
+    expect(config.get().override).toBe('supplemental');
   });
 
   test('addOverride error', () => {
@@ -384,9 +313,9 @@ describe('confit', () => {
     const basedir = path.join(__dirname, '..', '__tests__', 'import');
     const config = await confit({ basedir }).addDefault('override.json').create();
 
-    expect(config.getUntypedValue('child:grandchild:secret')).toBe('santa');
-    expect(config.getUntypedValue('child:grandchild:name')).toBe('grandchild');
-    expect(config.getUntypedValue('child:grandchild:another')).toBe('claus');
+    expect((config.get() as ReturnType<typeof JSON.parse>).child.grandchild.secret).toBe('santa');
+    expect((config.get() as ReturnType<typeof JSON.parse>).child.grandchild.name).toBe('grandchild');
+    expect((config.get() as ReturnType<typeof JSON.parse>).child.grandchild.another).toBe('claus');
   });
 
   test('precedence', async () => {
@@ -400,10 +329,10 @@ describe('confit', () => {
     };
 
     const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
-    const factory = confit<{ override: string; misc: string }>({ basedir });
+    const factory = confit<{ override: string; misc: string } & BaseConfitSchema>({ basedir });
     const config = await factory.create();
-    expect(config.get('override')).toBe('argv');
-    expect(config.get('misc')).toBe('env');
+    expect(config.get().override).toBe('argv');
+    expect(config.get().misc).toBe('env');
     process.argv = argv;
     process.env = env;
   });
@@ -419,11 +348,11 @@ describe('confit', () => {
     const config = await confit<{
       fromlocal: string;
       ignoreme?: string;
-    }>({
+    } & BaseConfitSchema>({
       basedir,
       excludeEnvVariables: ['ignoreme'],
     }).create();
-    expect(config.get('fromlocal')).toBe(env.local);
-    expect(config.get('ignoreme')).toBeUndefined();
+    expect(config.get().fromlocal).toBe(env.local);
+    expect(config.get().ignoreme).toBeUndefined();
   });
 });

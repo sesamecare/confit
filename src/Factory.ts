@@ -2,13 +2,13 @@ import path from 'path';
 
 import caller from 'caller';
 
-import { BaseConfitType, ConfitOptions, IntermediateConfigValue } from './types';
+import { BaseConfitSchema, ConfitOptions } from './types';
 import { Config } from './Config';
 import { isAbsolutePath, loadJsonc, merge } from './common';
 import { argv, convenience, environmentVariables } from './provider';
 import { resolveConfig, resolveCustom, resolveImport } from './handlers';
 
-export class Factory<ConfigurationType extends BaseConfitType> {
+export class Factory<ConfigurationType extends BaseConfitSchema> {
   private basedir: string;
   private protocols: ConfitOptions['protocols'];
   private promise: Promise<ConfigurationType>;
@@ -31,7 +31,7 @@ export class Factory<ConfigurationType extends BaseConfitType> {
         Factory.conditional((store) => {
           const jsonPath = path.join(this.basedir, `${store.env.env}.json`);
           return loadJsonc(jsonPath)
-            .then((json) => resolveImport(json as IntermediateConfigValue, this.basedir))
+            .then((json) => resolveImport(json, this.basedir))
             .then((data) => merge(data, store));
         }),
       )
@@ -79,7 +79,7 @@ export class Factory<ConfigurationType extends BaseConfitType> {
     return new Config<ConfigurationType>(finalStore as ConfigurationType);
   }
 
-  static conditional<ConfigurationType extends BaseConfitType, R>(
+  static conditional<ConfigurationType extends BaseConfitSchema, R>(
     fn: (store: ConfigurationType) => R,
   ) {
     return async (store: ConfigurationType) => {
