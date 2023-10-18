@@ -1,3 +1,10 @@
+## [2.0.1](https://github.com/sesamecare/confit/compare/v2.0.0...v2.0.1) (2023-10-18)
+
+
+### Bug Fixes
+
+* **env:** use APP_ENV instead of NODE_ENV if present ([faba60a](https://github.com/sesamecare/confit/commit/faba60a80db4eebecfc783d7412aa591664bddfd))
+
 # [2.0.0](https://github.com/sesamecare/confit/compare/v1.1.0...v2.0.0) (2023-10-18)
 
 
