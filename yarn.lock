@@ -353,10 +353,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openapi-typescript-infra/coconfig@npm:^4.2.1":
-  version: 4.2.1
-  resolution: "@openapi-typescript-infra/coconfig@npm:4.2.1"
-  checksum: 067ddd6fff7e1ede69aa0756afaae019269b03aa6bdb4a0cac7a6222575378c1eda2d2a346cfc47fb68a7ca3f54f03b8de3e71781cbe0c31245bc42c691179a5
+"@openapi-typescript-infra/coconfig@npm:^4.2.2":
+  version: 4.2.2
+  resolution: "@openapi-typescript-infra/coconfig@npm:4.2.2"
+  checksum: 8cbaf0bd20a06eaf0f310590456f5d9baef1f2a505c2ec7244685df82a6d9cbec5da4cdf0a28d7e8c8c033d80ad1d85325cc8903301c7d40986abc184aeb4b2e
   languageName: node
   linkType: hard
 
@@ -426,14 +426,14 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@sesamecare-oss/confit@workspace:."
   dependencies:
-    "@openapi-typescript-infra/coconfig": ^4.2.1
+    "@openapi-typescript-infra/coconfig": ^4.2.2
     "@semantic-release/changelog": ^6.0.3
     "@semantic-release/exec": ^6.0.3
     "@semantic-release/git": ^10.0.1
-    "@types/caller": ^1.0.0
-    "@types/js-yaml": ^4.0.7
-    "@types/minimist": ^1.2.3
-    "@types/node": ^20.8.6
+    "@types/caller": ^1.0.1
+    "@types/js-yaml": ^4.0.8
+    "@types/minimist": ^1.2.4
+    "@types/node": ^20.8.7
     "@typescript-eslint/eslint-plugin": ^6.8.0
     "@typescript-eslint/parser": ^6.8.0
     caller: ^1.1.0
@@ -493,10 +493,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/caller@npm:^1.0.0":
-  version: 1.0.0
-  resolution: "@types/caller@npm:1.0.0"
-  checksum: a5a3ff16980b9149796565c0c21ca37f954a5d7fe22c62926b485b5ba7cbae61086a0860e259366e4412cd97bc25cd7b610a02c0be0c03ec2c353c46bf21cfac
+"@types/caller@npm:^1.0.1":
+  version: 1.0.1
+  resolution: "@types/caller@npm:1.0.1"
+  checksum: a32c77a34251b320e58d91349da7e6177397b1964c76d13da22e7abaf25a7b1c20d571e531293450cc07c3c78063c860d156fe8476ad73c4cb65d9309aa83e17
   languageName: node
   linkType: hard
 
@@ -516,10 +516,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/js-yaml@npm:^4.0.7":
-  version: 4.0.7
-  resolution: "@types/js-yaml@npm:4.0.7"
-  checksum: e02eca876f3f19dbba62a26a18e59ec5df4e29300b99808fb0b4ca980cbfbb60e4a2c7d75d521728f5b2a3b92a0da5b9343497b2acf621b8ea019d48b40bbd78
+"@types/js-yaml@npm:^4.0.8":
+  version: 4.0.8
+  resolution: "@types/js-yaml@npm:4.0.8"
+  checksum: a5a77a5a1eac7e7fb667156c251c2b947ca4ddfdda570726369dd50bd5b2b1d0da2d0fb4273d1b10aa1782406d7b3da8923d957df4fb89dbfa1db06f43297de2
   languageName: node
   linkType: hard
 
@@ -537,19 +537,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/minimist@npm:^1.2.3":
-  version: 1.2.3
-  resolution: "@types/minimist@npm:1.2.3"
-  checksum: 666ea4f8c39dcbdfbc3171fe6b3902157c845cc9cb8cee33c10deb706cda5e0cc80f98ace2d6d29f6774b0dc21180c96cd73c592a1cbefe04777247c7ba0e84b
+"@types/minimist@npm:^1.2.4":
+  version: 1.2.4
+  resolution: "@types/minimist@npm:1.2.4"
+  checksum: d7912f9a466312cbc1333800272b9208178140ef4da2ccec3fa82231c8e67f57f84275b3c19109c4f68f1b7b057baeacc6b80af1de14b58b46e6b54233e44c6a
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:^20.8.6":
-  version: 20.8.6
-  resolution: "@types/node@npm:20.8.6"
+"@types/node@npm:*, @types/node@npm:^20.8.7":
+  version: 20.8.7
+  resolution: "@types/node@npm:20.8.7"
   dependencies:
     undici-types: ~5.25.1
-  checksum: ccfb7ac482c5a96edeb239893c5c099f5257fcc2ed9ae62fefdfbc782b79e16dbc2af9a85b379665237bf759904b44ca2be68e75d239e0297882aad42f61905c
+  checksum: 2173c0c03daefcb60c03a61b1371b28c8fe412e7a40dc6646458b809d14a85fbc7aeb369d957d57f0aaaafd99964e77436f29b3b579232d8f2b20c58abbd1d25
   languageName: node
   linkType: hard
 
