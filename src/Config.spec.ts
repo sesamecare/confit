@@ -12,7 +12,7 @@ describe('Core configuration tests', () => {
     expect(config.get().jump.howHigh).toBe(10);
     expect(config.get().jump).toEqual(fakeConfigurationSchema.jump);
     expect(config.get().jump.over).toEqual(fakeConfigurationSchema.jump.over);
-    expect(config.get().optional.notOptional).toBe('I am not optional');
+    expect(config.get().optional?.notOptional).toBe('I am not optional');
   });
 
   test('Should get a simple value', () => {
