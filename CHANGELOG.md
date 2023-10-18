@@ -1,3 +1,21 @@
+# [2.0.0](https://github.com/sesamecare/confit/compare/v1.1.0...v2.0.0) (2023-10-18)
+
+
+### Bug Fixes
+
+* **lint:** add elvis to optional property access ([f5f3a1b](https://github.com/sesamecare/confit/commit/f5f3a1b540a7bc72261bbb50d99e905bcff63a48))
+
+
+### Features
+
+* **types:** just expose the config store directly ([9874be5](https://github.com/sesamecare/confit/commit/9874be50a51e353182cfa3fa315a891683152d9c))
+
+
+### BREAKING CHANGES
+
+* **types:** The base type is now BaseConfitSchema and all
+the get/set fanciness is now just get()
+
 # [1.1.0](https://github.com/sesamecare/confit/compare/v1.0.6...v1.1.0) (2023-10-17)
 
 
