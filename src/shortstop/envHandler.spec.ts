@@ -69,4 +69,10 @@ describe('env', () => {
     delete process.env.SAMPLE;
     expect(handler('SAMPLE|!b')).toBe(true);
   });
+
+  test('should handle undefined values', () => {
+    process.env.SAMPLE = '';
+    expect(handler('SAMPLE')).toBe('');
+    expect(handler('SAMPLE|u')).toBe(undefined);
+  });
 });
