@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/sesamecare/confit/compare/v2.0.1...v2.0.2) (2023-10-19)
+
+
+### Bug Fixes
+
+* **env:** add |u to return undefined for an env var that is empty ([10efbd2](https://github.com/sesamecare/confit/commit/10efbd2d378fd06cba6b63533d2c6a0dd3b48ed1))
+
 ## [2.0.1](https://github.com/sesamecare/confit/compare/v2.0.0...v2.0.1) (2023-10-18)
 
 
