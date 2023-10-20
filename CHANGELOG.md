@@ -1,3 +1,10 @@
+# [2.1.0](https://github.com/sesamecare/confit/compare/v2.0.2...v2.1.0) (2023-10-20)
+
+
+### Features
+
+* **formatters:** add a few more formatters to env and file ([507e61a](https://github.com/sesamecare/confit/commit/507e61aaa8efd36e75ef14f1fa782a3bfc9e1fd8))
+
 ## [2.0.2](https://github.com/sesamecare/confit/compare/v2.0.1...v2.0.2) (2023-10-19)
 
 
