@@ -10,15 +10,15 @@ export function envHandler() {
     '|ud': (value?: string) => {
       return value === '' || value === undefined ? undefined : parseInt(value, 10);
     },
-    // Return it as a decimal
+    // Return the value as a decimal
     '|d': (value?: string) => {
       return parseInt(value || '', 10);
     },
-    // Return it as a boolean - empty, false, 0 and undefined will be false
+    // Return the value as a boolean - empty, false, 0 and undefined will be false
     '|b': (value?: string) => {
       return value !== '' && value !== 'false' && value !== '0' && value !== undefined;
     },
-    // Return it as a boolean but inverted so that empty/undefined/0/false are true
+    // Return the value as a boolean but inverted so that empty/undefined/0/false are true
     '|!b': (value?: string) => {
       return value === '' || value === 'false' || value === '0' || value === undefined;
     },

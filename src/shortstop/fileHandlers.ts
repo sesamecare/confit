@@ -71,7 +71,7 @@ export function fileHandler(basedir?: string | ReadOptions, options?: ReadOption
     const finalOptions = { ...baseOptions };
     let filename = value;
     // Find the options value with a pipe character and a spec at the end
-    const match = filename.match(/(.*)\|(base64|hex|utf8|ucs2|utf16le|ascii)$/);
+    const match = filename.match(/(.*)\|(base64|binary|hex|utf8|ucs2|utf16le|ascii)$/);
     if (match) {
       filename = match[1];
       finalOptions.encoding = match[2] as BufferEncoding;
