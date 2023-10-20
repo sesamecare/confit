@@ -1,3 +1,10 @@
+## [2.1.1](https://github.com/sesamecare/confit/compare/v2.1.0...v2.1.1) (2023-10-20)
+
+
+### Bug Fixes
+
+* **formatters:** document and clean up a couple formatters ([d04b57c](https://github.com/sesamecare/confit/commit/d04b57cb669e5dcf2d747d567c6c1cf2012744bb))
+
 # [2.1.0](https://github.com/sesamecare/confit/compare/v2.0.2...v2.1.0) (2023-10-20)
 
 
