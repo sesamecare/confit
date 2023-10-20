@@ -1,6 +1,6 @@
 {
   "name": "@sesamecare-oss/confit",
-  "version": "2.1.1",
+  "version": "0.0.0",
   "description": "",
   "main": "build/index.js",
   "types": "build/index.d.ts",
