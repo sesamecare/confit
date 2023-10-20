@@ -2,7 +2,7 @@ import Path from 'path';
 
 import { describe, expect, test } from 'vitest';
 
-import { globHandler, pathHandler, yamlHandler } from './fileHandlers';
+import { fileHandler, globHandler, pathHandler, yamlHandler } from './fileHandlers';
 
 describe('file related shortstop handlers', () => {
   test('path shortstop handler', () => {
@@ -58,5 +58,12 @@ describe('file related shortstop handlers', () => {
     matches = await handler('bad*');
     expect(matches?.length).toBe(1);
     expect(matches[0]).toBe(Path.join(basedir, 'bad.yaml'));
+  });
+
+  test('file shortstop handler', async () => {
+    const basedir = Path.join(__dirname, '..', '..', '__tests__', 'yaml');
+    const handler = fileHandler(basedir);
+    expect(await handler('good.yaml')).toBeInstanceOf(Buffer);
+    expect(await handler('good.yaml|utf8')).toBeTypeOf('string');
   });
 });

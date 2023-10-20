@@ -6,6 +6,10 @@ export function envHandler() {
     '|u': (value?: string) => {
       return value === '' ? undefined : value;
     },
+    // Return the variable as a number if it exists, or undefined
+    '|ud': (value?: string) => {
+      return value === '' || value === undefined ? undefined : parseInt(value, 10);
+    },
     // Return it as a decimal
     '|d': (value?: string) => {
       return parseInt(value || '', 10);

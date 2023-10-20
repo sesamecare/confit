@@ -42,22 +42,41 @@ export function pathHandler(basedir?: string) {
 
 type ReadOptions = Parameters<typeof fs.readFile>[1];
 
+function toReadOptionsObject(options?: ReadOptions) {
+  if (!options) {
+    return undefined;
+  }
+  if (typeof options === 'string') {
+    return { encoding: options };
+  }
+  if (typeof options === 'object') {
+    return options;
+  }
+  throw new Error('Unsupported fileHandler options - must be string or object');
+}
+
 /**
  * Return the contents of a file.
  */
 export function fileHandler(basedir?: string | ReadOptions, options?: ReadOptions) {
-  const finalBasedir = typeof basedir === 'string' ? basedir : undefined;
-  const finalOptions = typeof basedir === 'object' ? basedir : options;
+  const basedirValue = typeof basedir === 'string' ? basedir : undefined;
+  const baseOptions = {
+    encoding: null,
+    flag: 'r',
+    ...toReadOptionsObject(typeof basedir === 'object' ? basedir : options),
+  };
 
-  const pathhandler = pathHandler(finalBasedir);
+  const pathhandler = pathHandler(basedirValue);
   return async function fileHandler(value: string) {
-    return fs.readFile(
-      pathhandler(value),
-      finalOptions || {
-        encoding: null,
-        flag: 'r',
-      },
-    );
+    const finalOptions = { ...baseOptions };
+    let filename = value;
+    // Find the options value with a pipe character and a spec at the end
+    const match = filename.match(/(.*)\|(base64|hex|utf8|ucs2|utf16le|ascii)$/);
+    if (match) {
+      filename = match[1];
+      finalOptions.encoding = match[2] as BufferEncoding;
+    }
+    return fs.readFile(pathhandler(filename), finalOptions);
   };
 }
 
