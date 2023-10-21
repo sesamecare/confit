@@ -2,7 +2,7 @@ import path from 'path';
 
 import { afterAll, describe, expect, test } from 'vitest';
 
-import { BaseConfitSchema, confit } from './index';
+import { BaseConfitSchema, confit, unsetHandler } from './index';
 
 describe('confit', () => {
   const originalEnv = process.env.NODE_ENV;
@@ -36,11 +36,13 @@ describe('confit', () => {
   });
 
   test('use', async () => {
-    const config = await confit<{
-      foo: { bar: string };
-      bar: string;
-      arr: (number | string)[];
-    } & BaseConfitSchema>().create();
+    const config = await confit<
+      {
+        foo: { bar: string };
+        bar: string;
+        arr: (number | string)[];
+      } & BaseConfitSchema
+    >().create();
     config.use({ foo: { bar: 'baz' } });
 
     expect(typeof config.get().foo).toBe('object');
@@ -65,18 +67,20 @@ describe('confit', () => {
 
   test('import protocol', async () => {
     const basedir = path.join(__dirname, '..', '__tests__', 'import');
-    const config = await confit<{
-      name: string;
-      child: {
+    const config = await confit<
+      {
         name: string;
-        grandchild: {
+        child: {
           name: string;
+          grandchild: {
+            name: string;
+          };
+          grandchildJson: {
+            name: string;
+          };
         };
-        grandchildJson: {
-          name: string;
-        };
-      };
-    } & BaseConfitSchema>({ basedir }).create();
+      } & BaseConfitSchema
+    >({ basedir }).create();
     expect(config.get().name).toBe('parent');
     expect(config.get().child.name).toBe('child');
     expect(config.get().child.grandchild.name).toBe('grandchild');
@@ -98,17 +102,19 @@ describe('confit', () => {
 
   test('config protocol', async () => {
     const basedir = path.join(__dirname, '..', '__tests__', 'config');
-    const config = await confit<{
-      name: string;
-      foo: string;
-      bar: string;
-      baz: string;
-      imported: {
+    const config = await confit<
+      {
+        name: string;
         foo: string;
-      };
-      path: { to: { nested: { value: string } } };
-      value: string;
-    } & BaseConfitSchema>({ basedir }).create();
+        bar: string;
+        baz: string;
+        imported: {
+          foo: string;
+        };
+        path: { to: { nested: { value: string } } };
+        value: string;
+      } & BaseConfitSchema
+    >({ basedir }).create();
     expect(config.get().name).toBe('config');
     expect(config.get().foo).toBe(config.get().imported.foo);
     expect(config.get().bar).toBe(config.get().foo);
@@ -118,16 +124,18 @@ describe('confit', () => {
 
   test('default file import', async () => {
     const basedir = path.join(__dirname, '..', '__tests__', 'import');
-    const config = await confit<{
-      name: string;
-      foo: string;
-      child: {
+    const config = await confit<
+      {
         name: string;
-        grandchild: {
+        foo: string;
+        child: {
           name: string;
+          grandchild: {
+            name: string;
+          };
         };
-      };
-    } & BaseConfitSchema>({ basedir })
+      } & BaseConfitSchema
+    >({ basedir })
       .addDefault('./default.json')
       .create();
     expect(config.get().name).toBe('parent');
@@ -157,10 +165,12 @@ describe('confit', () => {
     process.env.NODE_ENV = 'test';
 
     const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
-    const config = await confit<{
-      default: string;
-      override: string;
-    } & BaseConfitSchema>({ basedir }).create();
+    const config = await confit<
+      {
+        default: string;
+        override: string;
+      } & BaseConfitSchema
+    >({ basedir }).create();
 
     // File-based overrides
     expect(config.get().default).toBe('config');
@@ -178,10 +188,12 @@ describe('confit', () => {
     process.env.NODE_ENV = 'dev';
 
     const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
-    const config = await confit<{
-      default: string;
-      override: string;
-    } & BaseConfitSchema>({ basedir }).create();
+    const config = await confit<
+      {
+        default: string;
+        override: string;
+      } & BaseConfitSchema
+    >({ basedir }).create();
     // File-based overrides
     expect(config.get().default).toBe('config');
     expect(config.get().override).toBe('development');
@@ -196,7 +208,9 @@ describe('confit', () => {
 
   test('confit addOverride as json object', async () => {
     const basedir = path.join(__dirname, '..', '__tests__', 'config');
-    const config = await confit<{ name: string; foo?: string; tic: { tac: string } } & BaseConfitSchema>({ basedir })
+    const config = await confit<
+      { name: string; foo?: string; tic: { tac: string } } & BaseConfitSchema
+    >({ basedir })
       .addOverride({
         tic: {
           tac: 'toe',
@@ -210,11 +224,13 @@ describe('confit', () => {
   });
 
   test('confit without files, using just json objects', async () => {
-    const config = await confit<{
-      foo: 'bar';
-      tic: { tac: string };
-      blue: boolean;
-    } & BaseConfitSchema>()
+    const config = await confit<
+      {
+        foo: 'bar';
+        tic: { tac: string };
+        blue: boolean;
+      } & BaseConfitSchema
+    >()
       .addDefault({
         foo: 'bar',
         tic: {
@@ -232,10 +248,12 @@ describe('confit', () => {
   test('protocols', async () => {
     process.env.NODE_ENV = 'dev';
     const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
-    const config = await confit<{
-      misc: string;
-      path: string;
-    } & BaseConfitSchema>({
+    const config = await confit<
+      {
+        misc: string;
+        path: string;
+      } & BaseConfitSchema
+    >({
       basedir,
       protocols: {
         path: (value: string) => path.join(basedir, value),
@@ -258,10 +276,12 @@ describe('confit', () => {
       },
     };
 
-    const config = await confit<{
-      misc: string;
-      path: string;
-    } & BaseConfitSchema>(options).create();
+    const config = await confit<
+      {
+        misc: string;
+        path: string;
+      } & BaseConfitSchema
+    >(options).create();
     expect(config.get().misc).toBe(path.join(basedir, 'config.json!'));
     expect(config.get().path).toBe(path.join(basedir, 'development.json!'));
 
@@ -288,13 +308,30 @@ describe('confit', () => {
     await expect(confit({ basedir }).create()).rejects.toThrow();
   });
 
+  test('unset', async () => {
+    const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
+    const config = await confit<
+      {
+        default: string;
+        override: string;
+      } & BaseConfitSchema
+    >({ basedir, protocols: { unset: unsetHandler() } })
+      .addOverride('development.json')
+      .addOverride(path.join(basedir, 'unset.json'))
+      .create();
+
+    expect(config.get().override).toBeUndefined();
+  });
+
   test('addOverride', async () => {
     process.env.NODE_ENV = 'test';
     const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
-    const config = await confit<{
-      default: string;
-      override: string;
-    } & BaseConfitSchema>({ basedir })
+    const config = await confit<
+      {
+        default: string;
+        override: string;
+      } & BaseConfitSchema
+    >({ basedir })
       .addOverride('development.json')
       .addOverride(path.join(basedir, 'supplemental.json'))
       .create();
@@ -314,7 +351,9 @@ describe('confit', () => {
     const config = await confit({ basedir }).addDefault('override.json').create();
 
     expect((config.get() as ReturnType<typeof JSON.parse>).child.grandchild.secret).toBe('santa');
-    expect((config.get() as ReturnType<typeof JSON.parse>).child.grandchild.name).toBe('grandchild');
+    expect((config.get() as ReturnType<typeof JSON.parse>).child.grandchild.name).toBe(
+      'grandchild',
+    );
     expect((config.get() as ReturnType<typeof JSON.parse>).child.grandchild.another).toBe('claus');
   });
 
@@ -345,14 +384,35 @@ describe('confit', () => {
       ignoreme: 'file:./path/to/mindyourbusiness',
     });
     const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
-    const config = await confit<{
-      fromlocal: string;
-      ignoreme?: string;
-    } & BaseConfitSchema>({
+    const config = await confit<
+      {
+        fromlocal: string;
+        ignoreme?: string;
+      } & BaseConfitSchema
+    >({
       basedir,
       excludeEnvVariables: ['ignoreme'],
     }).create();
     expect(config.get().fromlocal).toBe(env.local);
     expect(config.get().ignoreme).toBeUndefined();
   });
+
+  test('env via config', async () => {
+    const env = (process.env = {
+      SAMPLE: '8000',
+      sample: 'config:SAMPLE',
+      sampleNum: 'config:SAMPLE|d',
+    });
+    const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
+    const config = await confit<
+      {
+        sample: string;
+        sampleNum: number;
+      } & BaseConfitSchema
+    >({
+      basedir,
+    }).create();
+    expect(config.get().sample).toBe(env.SAMPLE);
+    expect(config.get().sampleNum).toBe(Number(env.SAMPLE));
+  })
 });

@@ -5,9 +5,37 @@ import { loadJsonc } from './common';
 
 type IntermediateConfigValue = ReturnType<typeof JSON.parse>;
 
-export async function resolveConfig(
-  inputData: IntermediateConfigValue,
-) {
+const filters = {
+  // Return the variable if it exists and is non-empty
+  '|u': (value?: unknown) => {
+    return value === '' ? undefined : value;
+  },
+  // Return the variable as a number if it exists, or undefined
+  '|ud': (value?: unknown) => {
+    return value === '' || value === undefined || value === null
+      ? undefined
+      : parseInt(value.toString(), 10);
+  },
+  // Return the value as a decimal
+  '|d': (value?: unknown) => {
+    return parseInt(value?.toString() || '', 10);
+  },
+  // Return the value as a boolean - empty, false, 0 and undefined will be false
+  '|b': (value?: unknown) => {
+    return (
+      value !== '' && value !== 'false' && value !== '0' && value !== undefined && value !== null
+    );
+  },
+  // Return the value as a boolean but inverted so that empty/undefined/0/false are true
+  '|!b': (value?: unknown) => {
+    return (
+      value === '' || value === 'false' || value === '0' || value === undefined || value === null
+    );
+  },
+  '|': (value?: unknown) => value,
+};
+
+export async function resolveConfig(inputData: IntermediateConfigValue) {
   const shorty = createShortstopHandlers();
 
   let data: unknown = inputData;
@@ -16,7 +44,17 @@ export async function resolveConfig(
   shorty.use('config', (key: string) => {
     usedHandler = true;
 
-    const keys = key.split('.');
+    let finalKey = key;
+    let transform: (value: unknown) => unknown = filters['|'];
+
+    Object.entries(filters).some(([filter, fn]) => {
+      if (key.endsWith(filter)) {
+        transform = fn;
+        finalKey = key.slice(0, -filter.length);
+      }
+    });
+
+    const keys = finalKey.split('.');
     let result: unknown = data;
 
     while (result && keys.length) {
@@ -27,7 +65,10 @@ export async function resolveConfig(
       result = (result as Record<string, unknown>)[prop];
     }
 
-    return keys.length ? null : result;
+    if (keys.length) {
+      return null;
+    }
+    return transform(result);
   });
 
   do {
