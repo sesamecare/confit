@@ -39,7 +39,9 @@ export class Factory<ConfigurationType extends BaseConfitSchema> {
       .then((store) => merge(argv(), store));
   }
 
-  private async resolveFile(pathOrConfig: string | Partial<ConfigurationType>): Promise<ConfigurationType> {
+  private async resolveFile(
+    pathOrConfig: string | Partial<ConfigurationType>,
+  ): Promise<ConfigurationType> {
     if (typeof pathOrConfig === 'string') {
       const file = isAbsolutePath(pathOrConfig)
         ? pathOrConfig

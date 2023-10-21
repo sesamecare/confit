@@ -414,5 +414,5 @@ describe('confit', () => {
     }).create();
     expect(config.get().sample).toBe(env.SAMPLE);
     expect(config.get().sampleNum).toBe(Number(env.SAMPLE));
-  })
+  });
 });

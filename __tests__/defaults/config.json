@@ -1,5 +1,5 @@
 {
-    "default": "config",
-    "override": "config",
-    "misc": "path:./config.json"
+  "default": "config",
+  "override": "config",
+  "misc": "path:./config.json"
 }

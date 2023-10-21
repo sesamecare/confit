@@ -1,4 +1,4 @@
 {
-    "name": "error",
-    "foo": "config:not.a.value"
+  "name": "error",
+  "foo": "config:not.a.value"
 }

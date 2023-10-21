@@ -1,8 +1,8 @@
 {
-    "child" : {
-        "grandchild": {
-            "name": "surprise",
-            "another": "claus"
-        }
+  "child": {
+    "grandchild": {
+      "name": "surprise",
+      "another": "claus"
     }
+  }
 }

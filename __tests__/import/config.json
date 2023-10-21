@@ -1,4 +1,4 @@
 {
-    "name": "parent",
-    "child": "import:./child.json"
+  "name": "parent",
+  "child": "import:./child.json"
 }

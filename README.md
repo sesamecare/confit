@@ -6,11 +6,11 @@
 
 The env shortstop handler accepts the following format specificiations:
 
-* `env:SOMEVAR|u` - Return the variable if it exists and is non-empty, else undefined
-* `env:SOMEVAR|ud` - Return the variable as a number if it exists, or undefined
-* `env:SOMEVAR|d` - Return the value as a decimal, or NaN if not there
-* `env:SOMEVAR|b` - Return the value as a boolean - empty, false, 0 and undefined will be false
-* `env:SOMEVAR|!b` - Return the value as a boolean but inverted so that empty/undefined/0/false are true
+- `env:SOMEVAR|u` - Return the variable if it exists and is non-empty, else undefined
+- `env:SOMEVAR|ud` - Return the variable as a number if it exists, or undefined
+- `env:SOMEVAR|d` - Return the value as a decimal, or NaN if not there
+- `env:SOMEVAR|b` - Return the value as a boolean - empty, false, 0 and undefined will be false
+- `env:SOMEVAR|!b` - Return the value as a boolean but inverted so that empty/undefined/0/false are true
 
 ## file
 
