@@ -1,7 +1,7 @@
-import { createShortstopHandlers } from './shortstop';
-import { pathHandler } from './shortstop/fileHandlers';
-import { ConfitOptions } from './types';
-import { loadJsonc } from './common';
+import { createShortstopHandlers } from './shortstop/index.js';
+import { pathHandler } from './shortstop/fileHandlers.js';
+import type { ConfitOptions } from './types.js';
+import { loadJsonc } from './common.js';
 
 type IntermediateConfigValue = ReturnType<typeof JSON.parse>;
 

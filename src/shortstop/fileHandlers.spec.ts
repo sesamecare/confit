@@ -1,8 +1,18 @@
-import Path from 'path';
+import Path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { describe, expect, test } from 'vitest';
 
-import { fileHandler, globHandler, pathHandler, yamlHandler } from './fileHandlers';
+import {
+  fileHandler,
+  globHandler,
+  pathHandler,
+  requireHandler,
+  yamlHandler,
+} from './fileHandlers.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = Path.dirname(__filename);
 
 describe('file related shortstop handlers', () => {
   test('path shortstop handler', () => {
@@ -35,8 +45,8 @@ describe('file related shortstop handlers', () => {
     const handler = yamlHandler(Path.join(__dirname, '..', '..', '__tests__', 'yaml'));
 
     expect(() => handler('good.yaml')).not.toThrow();
-    expect(() => handler('bad.yaml')).rejects.toThrow();
-    expect(handler('good.yaml')).resolves.toMatchInlineSnapshot(`
+    await expect(handler('bad.yaml')).rejects.toThrow();
+    await expect(handler('good.yaml')).resolves.toMatchInlineSnapshot(`
       {
         "root": {
           "key": "value",
@@ -65,5 +75,11 @@ describe('file related shortstop handlers', () => {
     const handler = fileHandler(basedir);
     expect(await handler('good.yaml')).toBeInstanceOf(Buffer);
     expect(await handler('good.yaml|utf8')).toBeTypeOf('string');
+  });
+
+  test('require shortstop handler', () => {
+    const handler = requireHandler(__dirname);
+
+    expect(handler('../../package.json')).toMatchObject({ name: '@sesamecare-oss/confit' });
   });
 });

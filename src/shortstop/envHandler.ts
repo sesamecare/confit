@@ -1,7 +1,5 @@
 export function envHandler() {
-  const filters: {
-    [key: string]: (value?: string) => number | boolean | string | undefined;
-  } = {
+  const filters: Record<string, (value?: string) => number | boolean | string | undefined> = {
     // Return the variable if it exists and is non-empty
     '|u': (value?: string) => {
       return value === '' ? undefined : value;

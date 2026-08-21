@@ -1,9 +1,12 @@
-import fs from 'fs/promises';
-import Path from 'path';
+import fs from 'node:fs/promises';
+import { createRequire } from 'node:module';
+import Path from 'node:path';
 
 import { glob, type GlobOptions } from 'glob';
 import yaml from 'js-yaml';
 import caller from 'caller';
+
+const appRequire = createRequire(Path.resolve(process.cwd(), 'package.json'));
 
 interface LoadOptions {
   /** string to be used as a file path in error/warning messages. */
@@ -11,18 +14,6 @@ interface LoadOptions {
   /** compatibility with JSON.parse behaviour. */
   json?: boolean | undefined;
 }
-
-(function expandModulePaths() {
-  // If this module is deployed outside the app's node_modules, it wouldn't be
-  // able to resolve other modules deployed under app while evaluating this shortstops.
-  // Adding app's node_modules folder to the paths will help handle this case.
-  const paths = module.paths || [];
-  const appNodeModules = Path.resolve(process.cwd(), 'node_modules');
-  if (paths.indexOf(appNodeModules) < 0) {
-    // Assuming Module._nodeModulePaths creates a new module.paths object for each module.
-    paths.push(appNodeModules);
-  }
-})();
 
 /**
  * Return an absolute path for the given value.
@@ -81,9 +72,9 @@ export function fileHandler(basedir?: string | ReadOptions, options?: ReadOption
 }
 
 /**
- * Call require() on a module and return the loaded module
+ * Load a CommonJS-compatible module and return its exports.
  */
-export function requireHandler(basedir?: string): ReturnType<typeof require> {
+export function requireHandler(basedir?: string): ReturnType<typeof appRequire> {
   const resolvePath = pathHandler(basedir);
   return function requireHandler(value: string) {
     let module = value;
@@ -94,7 +85,7 @@ export function requireHandler(basedir?: string): ReturnType<typeof require> {
       module = resolvePath(module);
     }
 
-    return require(module);
+    return appRequire(module);
   };
 }
 

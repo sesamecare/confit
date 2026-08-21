@@ -1,5 +1,5 @@
-import { ShortstopHandler } from '../types';
-import { isObject } from '../common';
+import type { ShortstopHandler } from '../types.js';
+import { isObject } from '../common.js';
 
 interface InternalHandler {
   protocol: string;

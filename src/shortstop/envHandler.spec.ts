@@ -1,6 +1,6 @@
 import { afterAll, beforeEach, describe, expect, test } from 'vitest';
 
-import { envHandler } from './envHandler';
+import { envHandler } from './envHandler.js';
 
 describe('env', () => {
   const originalEnv = process.env;

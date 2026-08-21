@@ -1,9 +1,12 @@
-import fs from 'fs/promises';
-import url from 'url';
-import Path from 'path';
+import fs from 'node:fs/promises';
+import { createRequire } from 'node:module';
+import Path from 'node:path';
+import url from 'node:url';
 
 import caller from 'caller';
 import commentJson from 'comment-json';
+
+const esmRequire = createRequire(import.meta.url);
 
 export const environmentPatterns: Record<string, RegExp> = {
   development: /^dev/i,
@@ -68,7 +71,7 @@ export async function loadJsonc(path: string) {
   root = Path.dirname(root);
 
   let abs = Path.resolve(root, file);
-  abs = require.resolve(abs);
+  abs = esmRequire.resolve(abs);
 
   const content = await fs.readFile(abs, 'utf-8');
   return commentJson.parse(content) as ReturnType<typeof JSON.parse>;

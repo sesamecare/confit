@@ -1,4 +1,4 @@
-name: Node CI
+name: Node build, test and publish
 
 on:
   pull_request:
@@ -7,17 +7,22 @@ on:
     branches:
       - main
 
-permissions: read-all
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js 20
-        uses: actions/setup-node@v3
+      - uses: actions/checkout@v6
+      - name: Use Node.js 22
+        uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: yarn
       - name: npm install, lint, build, and test
         run: |
@@ -30,16 +35,18 @@ jobs:
 
   publish-npm:
     needs: build
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
-    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
     permissions:
       contents: write
+      issues: write
       id-token: write
+      pull-requests: write
+    runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-node@v3
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
         with:
-          node-version: 20
+          node-version: 22
           cache: yarn
       - run: yarn install --immutable
       - run: yarn build
@@ -47,6 +54,6 @@ jobs:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.SESAMECARE_OSS_NPM_TOKEN }}
+          NPM_CONFIG_PROVENANCE: "true"
         run: |
-          yarn dlx semantic-release
+          npx semantic-release

@@ -1,4 +1,4 @@
-import { BaseConfitSchema } from '../src/types';
+import type { BaseConfitSchema } from '../src/types.js';
 
 export interface FakeConfigurationSchema extends BaseConfitSchema {
   jump: {

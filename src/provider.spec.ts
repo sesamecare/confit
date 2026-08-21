@@ -1,6 +1,10 @@
+import { fileURLToPath } from 'node:url';
+
 import { describe, afterAll, test, expect } from 'vitest';
 
-import * as provider from './provider';
+import * as provider from './provider.js';
+
+const __filename = fileURLToPath(import.meta.url);
 
 describe('env', () => {
   const originalEnv = process.env;

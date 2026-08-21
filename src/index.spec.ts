@@ -1,8 +1,13 @@
-import path from 'path';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 import { afterAll, describe, expect, test } from 'vitest';
 
-import { BaseConfitSchema, confit, unsetHandler } from './index';
+import type { BaseConfitSchema } from './index.js';
+import { confit, unsetHandler } from './index.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 describe('confit', () => {
   const originalEnv = process.env.NODE_ENV;
@@ -340,10 +345,10 @@ describe('confit', () => {
     expect(config.get().override).toBe('supplemental');
   });
 
-  test('addOverride error', () => {
+  test('addOverride error', async () => {
     const basedir = path.join(__dirname, '..', '__tests__', 'defaults');
-    expect(() => confit({ basedir }).addOverride('nonexistent.json').create()).rejects.toThrow();
-    expect(() => confit({ basedir }).addOverride('malformed.json').create()).rejects.toThrow();
+    await expect(confit({ basedir }).addOverride('nonexistent.json').create()).rejects.toThrow();
+    await expect(confit({ basedir }).addOverride('malformed.json').create()).rejects.toThrow();
   });
 
   test('import: with merging objects in imported files', async () => {

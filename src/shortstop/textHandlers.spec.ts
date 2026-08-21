@@ -1,6 +1,6 @@
 import { describe, test, expect } from 'vitest';
 
-import { base64Handler, bufferHandler, unsetHandler } from '.';
+import { base64Handler, bufferHandler, unsetHandler } from './index.js';
 
 describe('textHandlers', () => {
   test('base64', () => {

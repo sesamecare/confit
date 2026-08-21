@@ -1,6 +1,6 @@
-import type { BaseConfitSchema, ConfitOptions } from './types';
-import { Factory } from './Factory';
-import type { Config } from './Config';
+import type { BaseConfitSchema, ConfitOptions } from './types.js';
+import { Factory } from './Factory.js';
+import type { Config } from './Config.js';
 
 export function confit<ConfigurationType extends BaseConfitSchema>(options?: ConfitOptions) {
   return new Factory<ConfigurationType>(options || {});
@@ -8,6 +8,6 @@ export function confit<ConfigurationType extends BaseConfitSchema>(options?: Con
 
 export type Confit<ConfigSchema extends BaseConfitSchema> = Config<ConfigSchema>;
 
-export * from './Factory';
-export * from './types';
-export * from './shortstop';
+export * from './Factory.js';
+export * from './types.js';
+export * from './shortstop/index.js';

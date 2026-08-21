@@ -2,11 +2,11 @@ import path from 'path';
 
 import caller from 'caller';
 
-import { BaseConfitSchema, ConfitOptions } from './types';
-import { Config } from './Config';
-import { isAbsolutePath, loadJsonc, merge } from './common';
-import { argv, convenience, environmentVariables } from './provider';
-import { resolveConfig, resolveCustom, resolveImport } from './handlers';
+import type { BaseConfitSchema, ConfitOptions } from './types.js';
+import { Config } from './Config.js';
+import { isAbsolutePath, loadJsonc, merge } from './common.js';
+import { argv, convenience, environmentVariables } from './provider.js';
+import { resolveConfig, resolveCustom, resolveImport } from './handlers.js';
 
 export class Factory<ConfigurationType extends BaseConfitSchema> {
   private basedir: string;

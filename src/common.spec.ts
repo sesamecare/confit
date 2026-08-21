@@ -1,6 +1,12 @@
+import Path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
 import { describe, expect, test } from 'vitest';
 
-import * as common from './common';
+import * as common from './common.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = Path.dirname(__filename);
 
 describe('isAbsolute', () => {
   test('should validate absolute paths', () => {
@@ -40,7 +46,7 @@ describe('merge', () => {
   });
 
   test('should merge without overwriting unmatched keys', () => {
-    const src = { a: 'a' } as { a: string; b?: string };
+    const src: { a: string; b?: string } = { a: 'a' };
     const dest = { a: 'b', b: 'b' };
 
     common.merge(src, dest);

@@ -1,14 +1,13 @@
 import { describe, expect, test } from 'vitest';
 
-import { FakeConfigurationSchema, fakeConfigurationSchema } from '../__tests__/fakeConfig.fixtures';
+import type { FakeConfigurationSchema } from '../__tests__/fakeConfig.fixtures.js';
+import { fakeConfigurationSchema } from '../__tests__/fakeConfig.fixtures.js';
 
-import { Config } from './Config';
+import { Config } from './Config.js';
 
 describe('Core configuration tests', () => {
   test('Should get a simple value', () => {
-    const config = new Config<FakeConfigurationSchema>(
-      JSON.parse(JSON.stringify(fakeConfigurationSchema)),
-    );
+    const config = new Config<FakeConfigurationSchema>(structuredClone(fakeConfigurationSchema));
     expect(config.get().jump.howHigh).toBe(10);
     expect(config.get().jump).toEqual(fakeConfigurationSchema.jump);
     expect(config.get().jump.over).toEqual(fakeConfigurationSchema.jump.over);
@@ -16,9 +15,7 @@ describe('Core configuration tests', () => {
   });
 
   test('Should get a simple value', () => {
-    const config = new Config<FakeConfigurationSchema>(
-      JSON.parse(JSON.stringify(fakeConfigurationSchema)),
-    );
+    const config = new Config<FakeConfigurationSchema>(structuredClone(fakeConfigurationSchema));
     expect(config.get().jump.over.theMoon).toBe(false);
     config.get().jump.over = { theMoon: true };
     expect(config.get().jump.over.theMoon).toBe(true);

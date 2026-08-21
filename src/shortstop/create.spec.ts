@@ -1,15 +1,15 @@
 import { describe, expect, test } from 'vitest';
 
-import { createShortstopHandlers } from './create';
+import { createShortstopHandlers } from './create.js';
 
 describe('shortstop handling', () => {
-  test('should perform basic functions', () => {
+  test('should perform basic functions', async () => {
     const shortstop = createShortstopHandlers();
     shortstop.use('inc', (value: number) => {
       return Number(value) + 1;
     });
-    expect(shortstop.resolve('inc:1', '')).resolves.toBe(2);
-    expect(
+    await expect(shortstop.resolve('inc:1', '')).resolves.toBe(2);
+    await expect(
       shortstop.resolve(
         {
           key: 'inc:10',
@@ -27,7 +27,7 @@ describe('shortstop handling', () => {
       });
     });
 
-    expect(
+    await expect(
       shortstop.resolve(
         {
           values: ['inc:1', 'add:1:2'],

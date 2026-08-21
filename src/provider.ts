@@ -1,6 +1,6 @@
 import minimist from 'minimist';
 
-import { environmentPatterns } from './common';
+import { environmentPatterns } from './common.js';
 
 export function convenience() {
   // NextJS philosophy is don't use non-standard NODE_ENV values, and this seems
