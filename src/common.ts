@@ -11,6 +11,7 @@ const esmRequire = createRequire(import.meta.url);
 export const environmentPatterns: Record<string, RegExp> = {
   development: /^dev/i,
   test: /^test/i,
+  sandbox: /^sandbox/i,
   staging: /^stag/i,
   production: /^prod/i,
 };

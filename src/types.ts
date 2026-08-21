@@ -18,6 +18,7 @@ export interface BaseConfitSchema {
     env: string;
     test: boolean;
     development: boolean;
+    sandbox: boolean;
     staging: boolean;
     production: boolean;
   };

@@ -38,6 +38,9 @@ describe('confit', () => {
     expect(typeof config.get().env.development, 'should return boolean for env:development').toBe(
       'boolean',
     );
+    expect(typeof config.get().env.sandbox, 'should return boolean for env:sandbox').toBe(
+      'boolean',
+    );
   });
 
   test('use', async () => {

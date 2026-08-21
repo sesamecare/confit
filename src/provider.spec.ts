@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'node:url';
 
-import { describe, afterAll, test, expect } from 'vitest';
+import { afterAll, beforeEach, describe, expect, test } from 'vitest';
 
 import * as provider from './provider.js';
 
@@ -47,10 +47,24 @@ describe('argv', () => {
 });
 
 describe('convenience', () => {
-  const originalEnv = process.env.NODE_ENV;
+  const originalNodeEnv = process.env.NODE_ENV;
+  const originalAppEnv = process.env.APP_ENV;
+
+  beforeEach(() => {
+    delete process.env.APP_ENV;
+  });
 
   afterAll(() => {
-    process.env.NODE_ENV = originalEnv;
+    if (originalNodeEnv === undefined) {
+      delete process.env.NODE_ENV;
+    } else {
+      process.env.NODE_ENV = originalNodeEnv;
+    }
+    if (originalAppEnv === undefined) {
+      delete process.env.APP_ENV;
+    } else {
+      process.env.APP_ENV = originalAppEnv;
+    }
   });
 
   test('dev', () => {
@@ -60,6 +74,7 @@ describe('convenience', () => {
     expect(val.env.env).toBe('development');
     expect(val.env.development).toBe(true);
     expect(val.env.test).toBe(false);
+    expect(val.env.sandbox).toBe(false);
     expect(val.env.staging).toBe(false);
     expect(val.env.production).toBe(false);
   });
@@ -71,6 +86,20 @@ describe('convenience', () => {
     expect(val.env.env).toBe('test');
     expect(val.env.development).toBe(false);
     expect(val.env.test).toBe(true);
+    expect(val.env.sandbox).toBe(false);
+    expect(val.env.staging).toBe(false);
+    expect(val.env.production).toBe(false);
+  });
+
+  test('sandbox', () => {
+    process.env.APP_ENV = 'sandbox';
+    process.env.NODE_ENV = 'production';
+
+    const val = provider.convenience();
+    expect(val.env.env).toBe('sandbox');
+    expect(val.env.development).toBe(false);
+    expect(val.env.test).toBe(false);
+    expect(val.env.sandbox).toBe(true);
     expect(val.env.staging).toBe(false);
     expect(val.env.production).toBe(false);
   });
@@ -82,6 +111,7 @@ describe('convenience', () => {
     expect(val.env.env).toBe('staging');
     expect(val.env.development).toBe(false);
     expect(val.env.test).toBe(false);
+    expect(val.env.sandbox).toBe(false);
     expect(val.env.staging).toBe(true);
     expect(val.env.production).toBe(false);
   });
@@ -93,6 +123,7 @@ describe('convenience', () => {
     expect(val.env.env).toBe('production');
     expect(val.env.development).toBe(false);
     expect(val.env.test).toBe(false);
+    expect(val.env.sandbox).toBe(false);
     expect(val.env.staging).toBe(false);
     expect(val.env.production).toBe(true);
   });
@@ -104,6 +135,7 @@ describe('convenience', () => {
     expect(val.env.env).toBe('none');
     expect(val.env.development).toBe(false);
     expect(val.env.test).toBe(false);
+    expect(val.env.sandbox).toBe(false);
     expect(val.env.staging).toBe(false);
     expect(val.env.production).toBe(false);
     expect(val.env.none).toBe(true);
@@ -116,6 +148,7 @@ describe('convenience', () => {
     expect(val.env.env).toBe('development');
     expect(val.env.development).toBe(true);
     expect(val.env.test).toBe(false);
+    expect(val.env.sandbox).toBe(false);
     expect(val.env.staging).toBe(false);
     expect(val.env.production).toBe(false);
   });

@@ -28,6 +28,7 @@ export const fakeConfigurationSchema: FakeConfigurationSchema = {
     test: true,
     development: false,
     staging: false,
+    sandbox: false,
     production: false,
   },
 };

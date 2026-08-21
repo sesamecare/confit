@@ -4,7 +4,7 @@ import { environmentPatterns } from './common.js';
 
 export function convenience() {
   // NextJS philosophy is don't use non-standard NODE_ENV values, and this seems
-  // reasonable. APP_ENV includes staging, which is not a NODE_ENV value.
+  // reasonable. APP_ENV includes staging and sandbox, which are not NODE_ENV values.
   // So we will try to pick the best one we can find
   let nodeEnv = process.env.APP_ENV || process.env.NODE_ENV || 'development';
   const env: Record<string, string | boolean> = {};
